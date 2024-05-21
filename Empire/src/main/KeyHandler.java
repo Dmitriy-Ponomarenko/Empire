@@ -13,6 +13,10 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         
+        if (code == KeyEvent.VK_SHIFT && e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
+            sprint = true;
+        }
+        
         // WALK
         if (code == KeyEvent.VK_W) {
             upPressed = true;
@@ -40,83 +44,27 @@ public class KeyHandler implements KeyListener {
         if (downPressed && leftPressed) {
             downLeftPressed = true;
         }
-         
-        // Sprint up
-        if (code == KeyEvent.VK_SHIFT) {
-        	sprint = true;
-        	
-        	if(upPressed) {
-        		sprintUpPressed = true;
-        	}
-        }
-        
-        if (code == KeyEvent.VK_W) {
-        	if (sprint) {
-        		sprintUpPressed = true;
-        	}
-        }
-        
-        // Sprint down
-        if (code == KeyEvent.VK_SHIFT) {
-        	sprint = true;
-        	
-        	if(downPressed) {
-        		sprintDownPressed = true;
-        	}
-        }
-        
-        if (code == KeyEvent.VK_S) {
-        	if (sprint) {
-        		sprintDownPressed = true;
-        	}
-        }
-        
-        // Sprint right
-        if (code == KeyEvent.VK_SHIFT) {
-        	sprint = true;
-        	
-        	if(rightPressed) {
-        		sprintRightPressed = true;
-        	}
-        }
-        
-        if (code == KeyEvent.VK_D) {
-        	if (sprint) {
-        		sprintRightPressed = true;
-        	}
-        }
-        
-        // Sprint left
-        if (code == KeyEvent.VK_SHIFT) {
-        	sprint = true;
-        	
-        	if(leftPressed) {
-        		sprintLeftPressed = true;
-        	}
-        }
-        
-        if (code == KeyEvent.VK_A) {
-        	if (sprint) {
-        		sprintLeftPressed = true;
-        	}
-        }
+
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
 
+        if (code == KeyEvent.VK_SHIFT && e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
+            sprint = false;
+        }
         if (code == KeyEvent.VK_W) {
-            upPressed = upLeftPressed = upRightPressed = sprintUpPressed = sprint = false;
+            upPressed = upLeftPressed = upRightPressed = sprintUpPressed = false;
         }
         if (code == KeyEvent.VK_S) {
-            downPressed = downRightPressed = downLeftPressed = sprintDownPressed = sprint = false;
+            downPressed = downRightPressed = downLeftPressed = sprintDownPressed = false;
         }
         if (code == KeyEvent.VK_D) {
-            rightPressed = upRightPressed = downRightPressed = sprintRightPressed = sprint = false;
+            rightPressed = upRightPressed = downRightPressed = sprintRightPressed = false;
         }
         if (code == KeyEvent.VK_A) {
-            leftPressed = upLeftPressed = downLeftPressed = sprintLeftPressed = sprint = false;
+            leftPressed = upLeftPressed = downLeftPressed = sprintLeftPressed = false;
         }
         
     }
@@ -127,3 +75,4 @@ public class KeyHandler implements KeyListener {
     }
 
 }
+

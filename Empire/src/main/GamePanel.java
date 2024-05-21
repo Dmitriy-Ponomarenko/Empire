@@ -41,6 +41,7 @@ public class GamePanel extends JPanel implements Runnable {
 	int playerX = 100;
 	int playerY = 100;
 	int playerSpeed = 4;
+    int diagonalSpeed = (int) (playerSpeed / Math.sqrt(2));
 
 	public GamePanel() {
 
@@ -104,60 +105,72 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void update() {
 
-		//WALK
-		if (keyH.upPressed == true) {
-			playerY -= playerSpeed;
+	    //WALK
+	    if (keyH.upPressed == true) {
+	        if (keyH.sprint) {
+	            playerY -= playerSpeed * 2;
+	        } else {
+	            playerY -= playerSpeed;
+	        }
 
-		} else if (keyH.downPressed == true) {
-			playerY += playerSpeed;
+	    } else if (keyH.downPressed == true) {
+	        if (keyH.sprint) {
+	            playerY += playerSpeed * 2;
+	        } else {
+	            playerY += playerSpeed;
+	        }
 
-		} else if (keyH.rightPressed == true) {
-			playerX += playerSpeed;
+	    } else if (keyH.rightPressed == true) {
+	        if (keyH.sprint) {
+	            playerX += playerSpeed * 2;
+	        } else {
+	            playerX += playerSpeed;
+	        }
 
-		} else if (keyH.leftPressed == true) {
-			playerX -= playerSpeed;
+	    } else if (keyH.leftPressed == true) {
+	        if (keyH.sprint) {
+	            playerX -= playerSpeed * 2;
+	        } else {
+	            playerX -= playerSpeed;
+	        }
 
-		} else {
-
-		}
+	    }
 		
 		// Diagonal directions
-		if (keyH.upRightPressed == true) {
-			playerX += playerSpeed / 2;
-			playerY -= playerSpeed / 2;
-		}
+	    if (keyH.upPressed && keyH.rightPressed) {
+	        if (keyH.sprint) {
+	            playerY -= diagonalSpeed * 2;
+	            playerX += diagonalSpeed * 2;
+	        } else {
+	            playerY -= diagonalSpeed;
+	            playerX += diagonalSpeed;
+	        }
+	    } else if (keyH.upPressed && keyH.leftPressed) {
+	        if (keyH.sprint) {
+	            playerY -= diagonalSpeed * 2;
+	            playerX -= diagonalSpeed * 2;
+	        } else {
+	            playerY -= diagonalSpeed;
+	            playerX -= diagonalSpeed;
+	        }
+	    } else if (keyH.downPressed && keyH.rightPressed) {
+	        if (keyH.sprint) {
+	            playerY += diagonalSpeed * 2;
+	            playerX += diagonalSpeed * 2;
+	        } else {
+	            playerY += diagonalSpeed;
+	            playerX += diagonalSpeed;
+	        }
+	    } else if (keyH.downPressed && keyH.leftPressed) {
+	        if (keyH.sprint) {
+	            playerY += diagonalSpeed * 2;
+	            playerX -= diagonalSpeed * 2;
+	        } else {
+	            playerY += diagonalSpeed;
+	            playerX -= diagonalSpeed;
+	        }
 
-		if (keyH.downRightPressed == true) {
-			playerX += playerSpeed / 2;
-			playerY += playerSpeed / 2;
-		}
-
-		if (keyH.downLeftPressed == true) {
-			playerX -= playerSpeed / 2;
-			playerY += playerSpeed / 2;
-		}
-
-		if (keyH.upLeftPressed == true) {
-			playerX -= playerSpeed / 2;
-			playerY -= playerSpeed / 2;
-		}
-		
-		//SPRINT
-		if (keyH.sprintUpPressed == true) {
-			playerY -= playerSpeed * 2;
-		}
-		
-		if (keyH.sprintDownPressed == true) {
-			playerY += playerSpeed * 2;
-		}
-		
-		if (keyH.sprintRightPressed == true) {
-			playerX += playerSpeed * 2;
-		}
-		
-		if (keyH.sprintLeftPressed == true) {
-			playerX -= playerSpeed * 2;
-		}
+	    }
 		
 		// if(gameState == playState) {
 		// player.update();
