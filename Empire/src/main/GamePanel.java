@@ -11,7 +11,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	// SCREEN SATTINGS
 	final int originalTileSize = 32; // 32x32: default size of a tile
-	final int scale = 10; // tile scale for the screen
+	final int scale = 3; // tile scale for the screen
 
 	public final int tileSize = originalTileSize * scale; // 32 * 3 = 96px: screen size of a tile
 	public final int maxScreenCol = 16; // the number of columns - horizontally
@@ -104,6 +104,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void update() {
 
+		//WALK
 		if (keyH.upPressed == true) {
 			playerY -= playerSpeed;
 
@@ -119,7 +120,8 @@ public class GamePanel extends JPanel implements Runnable {
 		} else {
 
 		}
-
+		
+		// Diagonal directions
 		if (keyH.upRightPressed == true) {
 			playerX += playerSpeed / 2;
 			playerY -= playerSpeed / 2;
@@ -139,6 +141,24 @@ public class GamePanel extends JPanel implements Runnable {
 			playerX -= playerSpeed / 2;
 			playerY -= playerSpeed / 2;
 		}
+		
+		//SPRINT
+		if (keyH.sprintUpPressed == true) {
+			playerY -= playerSpeed * 2;
+		}
+		
+		if (keyH.sprintDownPressed == true) {
+			playerY += playerSpeed * 2;
+		}
+		
+		if (keyH.sprintRightPressed == true) {
+			playerX += playerSpeed * 2;
+		}
+		
+		if (keyH.sprintLeftPressed == true) {
+			playerX -= playerSpeed * 2;
+		}
+		
 		// if(gameState == playState) {
 		// player.update();
 		// }
