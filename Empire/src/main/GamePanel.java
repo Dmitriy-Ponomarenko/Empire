@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JPanel;
+import entity.Player;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -27,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
 	// SYSTEM
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread; // Thread to make the game go by itself
+	Player player = new Player(this, keyH);
 
 	// MAP PLACEMENT
 
@@ -36,12 +37,6 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int menuState = 1; // starting screen (menu)
 	public final int playState = 2; // in-game screen
 	public final int pauseState = 3; // pause screen
-
-	// DEFOLT PLAYER POSITION
-	int playerX = 100;
-	int playerY = 100;
-	int playerSpeed = 4;
-    int diagonalSpeed = (int) (playerSpeed / Math.sqrt(2));
 
 	public GamePanel() {
 
@@ -105,76 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void update() {
 
-	    //WALK
-	    if (keyH.upPressed == true) {
-	        if (keyH.sprint) {
-	            playerY -= playerSpeed * 2;
-	        } else {
-	            playerY -= playerSpeed;
-	        }
-
-	    } else if (keyH.downPressed == true) {
-	        if (keyH.sprint) {
-	            playerY += playerSpeed * 2;
-	        } else {
-	            playerY += playerSpeed;
-	        }
-
-	    } else if (keyH.rightPressed == true) {
-	        if (keyH.sprint) {
-	            playerX += playerSpeed * 2;
-	        } else {
-	            playerX += playerSpeed;
-	        }
-
-	    } else if (keyH.leftPressed == true) {
-	        if (keyH.sprint) {
-	            playerX -= playerSpeed * 2;
-	        } else {
-	            playerX -= playerSpeed;
-	        }
-
-	    }
-		
-		// Diagonal directions
-	    if (keyH.upPressed && keyH.rightPressed) {
-	        if (keyH.sprint) {
-	            playerY -= diagonalSpeed * 2;
-	            playerX += diagonalSpeed * 2;
-	        } else {
-	            playerY -= diagonalSpeed;
-	            playerX += diagonalSpeed;
-	        }
-	    } else if (keyH.upPressed && keyH.leftPressed) {
-	        if (keyH.sprint) {
-	            playerY -= diagonalSpeed * 2;
-	            playerX -= diagonalSpeed * 2;
-	        } else {
-	            playerY -= diagonalSpeed;
-	            playerX -= diagonalSpeed;
-	        }
-	    } else if (keyH.downPressed && keyH.rightPressed) {
-	        if (keyH.sprint) {
-	            playerY += diagonalSpeed * 2;
-	            playerX += diagonalSpeed * 2;
-	        } else {
-	            playerY += diagonalSpeed;
-	            playerX += diagonalSpeed;
-	        }
-	    } else if (keyH.downPressed && keyH.leftPressed) {
-	        if (keyH.sprint) {
-	            playerY += diagonalSpeed * 2;
-	            playerX -= diagonalSpeed * 2;
-	        } else {
-	            playerY += diagonalSpeed;
-	            playerX -= diagonalSpeed;
-	        }
-
-	    }
-		
-		// if(gameState == playState) {
-		// player.update();
-		// }
+	    player.update();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -182,8 +108,8 @@ public class GamePanel extends JPanel implements Runnable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-		g2.setColor(Color.white);
-		g2.fillRect(playerX, playerY, tileSize, tileSize);
+		player.draw(g2);
+		
 		g2.dispose();
 	}
 
