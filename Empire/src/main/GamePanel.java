@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import entity.Player;
+import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -20,14 +21,23 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int screenHight = tileSize * maxScreenRow; // 864px - screen height
 
 	// WORLD SETTING
+	public final int maxWorldCol = 50;
+	public final int maxWorldRow = 50;
 
 	// FPS
 	int FPS = 60;
 
 	// SYSTEM
+	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();
+	Sound music = new Sound();
+	Sound soundEffect = new Sound();
+	public CollisionChecker cChecker = new CollisionChecker(this);
+	public UI ui = new UI(this);
 	Thread gameThread; // Thread to make the game go by itself
-	Player player = new Player(this, keyH);
+
+	// ENTITY AND OBJECTS
+	public Player player = new Player(this, keyH);
 
 	// MAP PLACEMENT
 
@@ -50,6 +60,10 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 
 	// GAME SETUP
+	public void setupGame() {
+
+		playMusic(0);
+	}
 
 	// THREAD ACTION
 	public void startGameThread() {
@@ -100,7 +114,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void update() {
 
-	    player.update();
+		player.update();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -108,9 +122,36 @@ public class GamePanel extends JPanel implements Runnable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
+		// TILE
+		tileM.draw(g2);
+
+		// OBJECT
+
+		// PLAYER
 		player.draw(g2);
-		
+
+		// UI
+		ui.draw(g2);
+
 		g2.dispose();
 	}
 
+	public void playMusic(int i) {
+
+		music.setFile(i);
+		music.play();
+		music.loop();
+	}
+
+	public void stopMusic() {
+
+		music.stop();
+	}
+
+	public void playSoundEffect(int i) {
+
+		// gp.playSoundEffect(index of the sound effect);
+		soundEffect.setFile(i);
+		soundEffect.play();
+	}
 }

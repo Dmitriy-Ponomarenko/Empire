@@ -7,16 +7,16 @@ public class KeyHandler implements KeyListener {
 
     public boolean upPressed, downPressed, leftPressed, rightPressed;
     public boolean upRightPressed, downRightPressed, upLeftPressed, downLeftPressed;
-    public boolean sprint, sprintUpPressed, sprintDownPressed, sprintRightPressed, sprintLeftPressed; 
+    public boolean sprint, sprintUpPressed, sprintDownPressed, sprintRightPressed, sprintLeftPressed;
 
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        
+
         if (code == KeyEvent.VK_SHIFT && e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
             sprint = true;
         }
-        
+
         // WALK
         if (code == KeyEvent.VK_W) {
             upPressed = true;
@@ -30,7 +30,7 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_A) {
             leftPressed = true;
         }
-        
+
         // Diagonal directions
         if (upPressed && rightPressed) {
             upRightPressed = true;
@@ -66,9 +66,9 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_A) {
             leftPressed = upLeftPressed = downLeftPressed = sprintLeftPressed = false;
         }
-        
+
     }
-    
+
     @Override
     public void keyTyped(KeyEvent e) {
 
