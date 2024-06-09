@@ -5,9 +5,14 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
+    GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
     public boolean upRightPressed, downRightPressed, upLeftPressed, downLeftPressed;
     public boolean sprint, sprintUpPressed, sprintDownPressed, sprintRightPressed, sprintLeftPressed;
+
+    public KeyHandler(GamePanel gp) {
+        this.gp = gp;
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -44,6 +49,14 @@ public class KeyHandler implements KeyListener {
         if (downPressed && leftPressed) {
             downLeftPressed = true;
         }
+
+        // if (code == KeyEvent.VK_ESCAPE) {
+        // if (gp.gameState == gp.playState) {
+        // gp.gameState = gp.pauseState;
+        // } else if (gp.gameState == gp.pauseState) {
+        // gp.gameState = gp.playState;
+        // }
+        // }
 
     }
 

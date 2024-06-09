@@ -14,7 +14,6 @@ import main.UtilityTool;
 
 public class Player extends Entity {
 
-	GamePanel gp;
 	KeyHandler keyH;
 
 	public final int screenX;
@@ -22,14 +21,18 @@ public class Player extends Entity {
 
 	public Player(GamePanel gp, KeyHandler keyH) {
 
+		super(gp);
 		this.gp = gp;
 		this.keyH = keyH;
 
 		screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
-		screenY = gp.screenHight / 2 - (gp.tileSize / 2);
+		screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
 
-		solidArea = new Rectangle(0, 0, 48, 48);
-
+		solidArea = new Rectangle(0, 0, 32, 32);
+		solidArea.x = 8;
+		solidArea.y = 16;
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
 		setDefoultValues();
 		getPlayerImage();
 	}
@@ -39,36 +42,24 @@ public class Player extends Entity {
 		worldX = gp.tileSize * 23;
 		worldY = gp.tileSize * 23;
 		playerSpeed = 3;
-		playerHP = 100;
-		diagonalSpeed = (int) (playerSpeed / Math.sqrt(2));
+		playerDiagonalSpeed = (int) (playerSpeed / Math.sqrt(2));
 		direction = "down";
+
+		// PLAYER STATUS
+		maxLife = 100;
+		life = maxLife;
 	}
 
 	public void getPlayerImage() {
 
-		up1 = setup("playerStandingUp");
-		up2 = setup("playerStandingUp");
-		down1 = setup("playerStandingDown");
-		down2 = setup("playerStandingDown");
-		right1 = setup("playerStandingRight");
-		right2 = setup("playerStandingRight");
-		left1 = setup("playerStandingLeft");
-		left2 = setup("playerStandingLeft");
-	}
-
-	public BufferedImage setup(String imageName) {
-
-		UtilityTool uTool = new UtilityTool();
-		BufferedImage scaledImage = null;
-
-		try {
-			scaledImage = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
-			scaledImage = uTool.scaleImage(scaledImage, gp.tileSize, gp.tileSize);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return scaledImage;
+		up1 = setup("/player/playerStandingUp");
+		up2 = setup("/player/playerStandingUp");
+		down1 = setup("/player/playerStandingDown");
+		down2 = setup("/player/playerStandingDown");
+		right1 = setup("/player/playerStandingRight");
+		right2 = setup("/player/playerStandingRight");
+		left1 = setup("/player/playerStandingLeft");
+		left2 = setup("/player/playerStandingLeft");
 	}
 
 	public void update() {
@@ -91,35 +82,35 @@ public class Player extends Entity {
 			// Diagonal directions
 			if (keyH.upPressed && keyH.rightPressed) {
 				if (keyH.sprint) {
-					worldY -= diagonalSpeed * 2;
-					worldX += diagonalSpeed * 2;
+					worldY -= playerDiagonalSpeed * 2;
+					worldX += playerDiagonalSpeed * 2;
 				} else {
-					worldY -= diagonalSpeed;
-					worldX += diagonalSpeed;
+					worldY -= playerDiagonalSpeed;
+					worldX += playerDiagonalSpeed;
 				}
 			} else if (keyH.upPressed && keyH.leftPressed) {
 				if (keyH.sprint) {
-					worldY -= diagonalSpeed * 2;
-					worldX -= diagonalSpeed * 2;
+					worldY -= playerDiagonalSpeed * 2;
+					worldX -= playerDiagonalSpeed * 2;
 				} else {
-					worldY -= diagonalSpeed;
-					worldX -= diagonalSpeed;
+					worldY -= playerDiagonalSpeed;
+					worldX -= playerDiagonalSpeed;
 				}
 			} else if (keyH.downPressed && keyH.rightPressed) {
 				if (keyH.sprint) {
-					worldY += diagonalSpeed * 2;
-					worldX += diagonalSpeed * 2;
+					worldY += playerDiagonalSpeed * 2;
+					worldX += playerDiagonalSpeed * 2;
 				} else {
-					worldY += diagonalSpeed;
-					worldX += diagonalSpeed;
+					worldY += playerDiagonalSpeed;
+					worldX += playerDiagonalSpeed;
 				}
 			} else if (keyH.downPressed && keyH.leftPressed) {
 				if (keyH.sprint) {
-					worldY += diagonalSpeed * 2;
-					worldX -= diagonalSpeed * 2;
+					worldY += playerDiagonalSpeed * 2;
+					worldX -= playerDiagonalSpeed * 2;
 				} else {
-					worldY += diagonalSpeed;
-					worldX -= diagonalSpeed;
+					worldY += playerDiagonalSpeed;
+					worldX -= playerDiagonalSpeed;
 				}
 
 			}
@@ -127,6 +118,10 @@ public class Player extends Entity {
 			// CHECK TILE COLLISION
 			collisionOn = false;
 			gp.cChecker.checkTile(this);
+
+			// CHECK OBJECT COLLISION
+			int objectIndex = gp.cChecker.checkObject(this, true);
+			pickUpObject(objectIndex);
 
 			// Collision == false => player can move
 			if (collisionOn == false) {
@@ -159,7 +154,43 @@ public class Player extends Entity {
 						} else {
 							worldX += playerSpeed;
 						}
-						break;
+						// break;
+						// case "upRight":
+						// if (keyH.sprint) {
+						// worldX += playerSpeed * 2;
+						// worldY -= playerSpeed * 2;
+						// } else {
+						// worldX -= playerSpeed;
+						// worldY -= playerSpeed;
+						// }
+						// break;
+						// case "upLeft" :
+						// if (keyH.sprint) {
+						// worldX -= playerSpeed * 2;
+						// worldY -= playerSpeed * 2;
+						// } else {
+						// worldX -= playerSpeed;
+						// worldY -= playerSpeed;
+						// }
+						// break;
+						// case "downRight":
+						// if (keyH.sprint) {
+						// worldX += playerSpeed * 2;
+						// worldY += playerSpeed * 2;
+						// } else {
+						// worldX += playerSpeed;
+						// worldY += playerSpeed;
+						// }
+						// break;
+						// case "downLeft":
+						// if (keyH.sprint) {
+						// worldX -= playerSpeed * 2;
+						// worldY += playerSpeed * 2;
+						// } else {
+						// worldX -= playerSpeed;
+						// worldY += playerSpeed;
+						// }
+						// break;
 				}
 			}
 
@@ -185,10 +216,11 @@ public class Player extends Entity {
 				}
 			}
 
-			// if(gameState == playState) {
-			// player.update();
-			// }
 		}
+	}
+
+	public void pickUpObject(int i) {
+
 	}
 
 	public void draw(Graphics2D g2) {

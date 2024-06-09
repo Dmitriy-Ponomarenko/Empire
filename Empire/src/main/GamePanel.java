@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import entity.Player;
+import entity.Entity;
+import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -18,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int maxScreenCol = 16; // the number of columns - horizontally
 	public final int maxScreenRow = 9; // the number of rows - vertically
 	public final int screenWidth = tileSize * maxScreenCol; // 1536px - screen width
-	public final int screenHight = tileSize * maxScreenRow; // 864px - screen height
+	public final int screenHeight = tileSize * maxScreenRow; // 864px - screen height
 
 	// WORLD SETTING
 	public final int maxWorldCol = 50;
@@ -29,15 +31,18 @@ public class GamePanel extends JPanel implements Runnable {
 
 	// SYSTEM
 	TileManager tileM = new TileManager(this);
-	KeyHandler keyH = new KeyHandler();
+	KeyHandler keyH = new KeyHandler(this);
 	Sound music = new Sound();
 	Sound soundEffect = new Sound();
 	public CollisionChecker cChecker = new CollisionChecker(this);
+	public AssetSetter aSetter = new AssetSetter(this);
 	public UI ui = new UI(this);
 	Thread gameThread; // Thread to make the game go by itself
 
 	// ENTITY AND OBJECTS
 	public Player player = new Player(this, keyH);
+	public SuperObject obj[] = new SuperObject[10];
+	public Entity npc[] = new Entity[10];
 
 	// MAP PLACEMENT
 
@@ -50,8 +55,8 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public GamePanel() {
 
-		this.setPreferredSize(new Dimension(screenWidth, screenHight)); // new Dimension 50x50 world squares (not px)
-		this.setBackground(Color.black); // default background color
+		this.setPreferredSize(new Dimension(screenWidth, screenHeight)); // new Dimension 50x50 world squares (not px)
+		this.setBackground(new Color(0x93, 0xaf, 0x66)); // default background color
 
 		this.setDoubleBuffered(true); // drawing the graphic components into the screen image
 										// buffer and then copying the contents of the buffer to the screen all at once
@@ -62,7 +67,10 @@ public class GamePanel extends JPanel implements Runnable {
 	// GAME SETUP
 	public void setupGame() {
 
+		aSetter.setObject();
+		aSetter.setNPC();
 		playMusic(0);
+		gameState = playState;
 	}
 
 	// THREAD ACTION
@@ -114,7 +122,18 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public void update() {
 
+		// if (gameState == playState) {
+		// PLAYER
 		player.update();
+		// NPC
+		for (int i = 0; i < npc.length; i++) {
+			if (npc[i] != null) {
+				npc[i].update();
+			}
+		}
+		// } else if (gameState == pauseState) {
+		// // Add pause logic here
+		// }
 	}
 
 	public void paintComponent(Graphics g) {
@@ -126,6 +145,18 @@ public class GamePanel extends JPanel implements Runnable {
 		tileM.draw(g2);
 
 		// OBJECT
+		for (int i = 0; i < obj.length; i++) {
+			if (obj[i] != null) {
+				obj[i].draw(g2, this);
+			}
+		}
+
+		// NPC
+		for (int i = 0; i < npc.length; i++) {
+			if (npc[i] != null) {
+				npc[i].draw(g2);
+			}
+		}
 
 		// PLAYER
 		player.draw(g2);
