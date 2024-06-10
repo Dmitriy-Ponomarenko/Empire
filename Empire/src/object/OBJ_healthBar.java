@@ -1,40 +1,33 @@
 package object;
 
-import java.io.IOException;
 import main.GamePanel;
-import javax.imageio.ImageIO;
+import entity.Entity;
+import main.UtilityTool;
 
-public class OBJ_healthBar extends SuperObject {
+import java.awt.image.BufferedImage;
 
-	GamePanel gp;
+public class OBJ_healthBar extends Entity {
 
-	public OBJ_healthBar(GamePanel gp) {
+    public OBJ_healthBar(GamePanel gp) {
+        super(gp);
 
-		name = "healthBar";
-		try {
-			image = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-10.png"));
-			image1 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-20.png"));
-			image2 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-30.png"));
-			image3 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-40.png"));
-			image4 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-50.png"));
-			image5 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-60.png"));
-			image6 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-70.png"));
-			image7 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-80.png"));
-			image8 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-90.png"));
-			image9 = ImageIO.read(getClass().getResourceAsStream("/objects/health-bar-100.png"));
+        name = "healthBar";
 
-			image = uTool.scaleImage(image, gp.tileSize * 3, gp.tileSize * 2);
-			image1 = uTool.scaleImage(image1, gp.tileSize, gp.tileSize);
-			image2 = uTool.scaleImage(image2, gp.tileSize, gp.tileSize);
-			image3 = uTool.scaleImage(image3, gp.tileSize, gp.tileSize);
-			image4 = uTool.scaleImage(image4, gp.tileSize, gp.tileSize);
-			image5 = uTool.scaleImage(image5, gp.tileSize, gp.tileSize);
-			image6 = uTool.scaleImage(image6, gp.tileSize, gp.tileSize);
-			image7 = uTool.scaleImage(image7, gp.tileSize, gp.tileSize);
-			image8 = uTool.scaleImage(image8, gp.tileSize, gp.tileSize);
-			image9 = uTool.scaleImage(image9, gp.tileSize * 4, gp.tileSize + 70);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        image = scaleHealthBarImage(gp, "/objects/health-bar-10.png");
+        image1 = scaleHealthBarImage(gp, "/objects/health-bar-20.png");
+        image2 = scaleHealthBarImage(gp, "/objects/health-bar-30.png");
+        image3 = scaleHealthBarImage(gp, "/objects/health-bar-40.png");
+        image4 = scaleHealthBarImage(gp, "/objects/health-bar-50.png");
+        image5 = scaleHealthBarImage(gp, "/objects/health-bar-60.png");
+        image6 = scaleHealthBarImage(gp, "/objects/health-bar-70.png");
+        image7 = scaleHealthBarImage(gp, "/objects/health-bar-80.png");
+        image8 = scaleHealthBarImage(gp, "/objects/health-bar-90.png");
+        image9 = scaleHealthBarImage(gp, "/objects/health-bar-100.png");
+    }
+
+    private BufferedImage scaleHealthBarImage(GamePanel gp, String imagePath) {
+        UtilityTool uTool = new UtilityTool();
+
+        return uTool.scaleImage(setup("/objects/health-bar-100"), gp.tileSize * 4, gp.tileSize + 70);
+    }
 }

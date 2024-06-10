@@ -4,10 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import javax.swing.JPanel;
 import entity.Player;
 import entity.Entity;
-import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -31,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	// SYSTEM
 	TileManager tileM = new TileManager(this);
-	KeyHandler keyH = new KeyHandler(this);
+	public KeyHandler keyH = new KeyHandler(this);
 	Sound music = new Sound();
 	Sound soundEffect = new Sound();
 	public CollisionChecker cChecker = new CollisionChecker(this);
@@ -41,8 +44,10 @@ public class GamePanel extends JPanel implements Runnable {
 
 	// ENTITY AND OBJECTS
 	public Player player = new Player(this, keyH);
-	public SuperObject obj[] = new SuperObject[10];
+	public Entity obj[] = new Entity[10]; // the number of objects that can be displayed at the same time
 	public Entity npc[] = new Entity[10];
+	public Entity enemy[] = new Entity[20];
+	ArrayList<Entity> entityList = new ArrayList<>();
 
 	// MAP PLACEMENT
 
@@ -69,6 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		aSetter.setObject();
 		aSetter.setNPC();
+		aSetter.setEnemy();
 		playMusic(0);
 		gameState = playState;
 	}
@@ -123,16 +129,26 @@ public class GamePanel extends JPanel implements Runnable {
 	public void update() {
 
 		// if (gameState == playState) {
+
 		// PLAYER
 		player.update();
+
 		// NPC
 		for (int i = 0; i < npc.length; i++) {
 			if (npc[i] != null) {
 				npc[i].update();
 			}
 		}
+
+		// ENEMY
+		for (int i = 0; i < enemy.length; i++) {
+			if (enemy[i] != null) {
+				enemy[i].update();
+			}
+		}
+
 		// } else if (gameState == pauseState) {
-		// // Add pause logic here
+		// // pause logic
 		// }
 	}
 
@@ -144,27 +160,50 @@ public class GamePanel extends JPanel implements Runnable {
 		// TILE
 		tileM.draw(g2);
 
-		// OBJECT
-		for (int i = 0; i < obj.length; i++) {
-			if (obj[i] != null) {
-				obj[i].draw(g2, this);
-			}
-		}
+		// PLAYER, NPC, ENEMIES AND OBJECTS
+		entityList.add(player);
 
-		// NPC
 		for (int i = 0; i < npc.length; i++) {
 			if (npc[i] != null) {
-				npc[i].draw(g2);
+				entityList.add(npc[i]);
 			}
 		}
 
-		// PLAYER
-		player.draw(g2);
+		for (int i = 0; i < obj.length; i++) {
+			if (obj[i] != null) {
+				entityList.add(obj[i]);
+			}
+		}
+
+		for (int i = 0; i < enemy.length; i++) {
+			if (enemy[i] != null) {
+				entityList.add(enemy[i]);
+			}
+		}
+
+		// SORT METHOD
+		Collections.sort(entityList, new Comparator<Entity>() {
+
+			@Override
+			public int compare(Entity e1, Entity e2) {
+
+				int result = Integer.compare(e1.worldY, e2.worldY);
+				return result;
+			}
+		});
+
+		// DRAW ENTITIES
+		for (int i = 0; i < entityList.size(); i++) {
+			entityList.get(i).draw(g2);
+		}
+
+		// EMPTY ENTITY LIST
+		entityList.clear();
 
 		// UI
 		ui.draw(g2);
 
-		g2.dispose();
+		// g2.dispose();
 	}
 
 	public void playMusic(int i) {

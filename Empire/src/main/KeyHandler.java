@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed;
     public boolean upRightPressed, downRightPressed, upLeftPressed, downLeftPressed;
     public boolean sprint, sprintUpPressed, sprintDownPressed, sprintRightPressed, sprintLeftPressed;
 
@@ -17,6 +17,10 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
+
+        // if ( code == KeyEvent.VK_ENTER) {
+        //
+        // }
 
         if (code == KeyEvent.VK_SHIFT && e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) {
             sprint = true;
@@ -50,13 +54,13 @@ public class KeyHandler implements KeyListener {
             downLeftPressed = true;
         }
 
-        // if (code == KeyEvent.VK_ESCAPE) {
-        // if (gp.gameState == gp.playState) {
-        // gp.gameState = gp.pauseState;
-        // } else if (gp.gameState == gp.pauseState) {
-        // gp.gameState = gp.playState;
-        // }
-        // }
+        if (code == KeyEvent.VK_ESCAPE) {
+            if (gp.gameState == gp.playState) {
+                gp.gameState = gp.pauseState;
+            } else if (gp.gameState == gp.pauseState) {
+                gp.gameState = gp.playState;
+            }
+        }
 
     }
 

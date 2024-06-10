@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import javax.imageio.ImageIO;
-import java.awt.image.*;
 
 import main.GamePanel;
 import main.UtilityTool;
@@ -14,17 +13,22 @@ import main.UtilityTool;
 public class TileManager {
 
 	GamePanel gp;
+	// Array for images
 	public Tile[] tile;
+	// 2 Dimensional array to read the map
 	public int mapTileNum[][];
 
 	public TileManager(GamePanel gp) {
 
 		this.gp = gp;
 
+		// Array sets
 		tile = new Tile[71];
 		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
+		// Sets images for places in the array
 		getTileImage();
+		// Loads the map file
 		loadMap("/maps/map1.txt");
 	}
 
@@ -42,8 +46,10 @@ public class TileManager {
 
 	}
 
+	// THE CONNECTION OF ARRAY INDEXES WITH THE IMAGES
 	public void setup(int index, String imageName, boolean collision) {
 
+		// SCALE FOR IMAGES
 		UtilityTool uTool = new UtilityTool();
 
 		try {
@@ -58,6 +64,7 @@ public class TileManager {
 		}
 	}
 
+	// LOADS ALL THE IMAGES TO THEIR NUMBERS
 	public void loadMap(String filePath) {
 
 		try {
@@ -93,6 +100,7 @@ public class TileManager {
 		}
 	}
 
+	// DRAWS ALL THE IMAGES ON THE SCREEN (WITH A DISTANCE FROM EACH OTHER)
 	public void draw(Graphics2D g2) {
 
 		int worldCol = 0;

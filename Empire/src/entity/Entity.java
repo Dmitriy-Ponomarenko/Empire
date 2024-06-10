@@ -18,7 +18,9 @@ public class Entity {
 	public int defoltSpeed = 3;
 
 	public BufferedImage up1, up2, down1, down2, right1, right2, left1, left2;
-	public String direction;
+	public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackRight1, attackRight2, attackLeft1,
+			attackLeft2;
+	public String direction = "down";
 
 	public int spriteCounter = 0;
 	public int spriteNum = 1;
@@ -27,9 +29,18 @@ public class Entity {
 	public boolean collisionOn = false;
 	public int actionInterval;
 
+	// OBJECTS AND NPC
+	public BufferedImage image, image1, image2, image3, image4, image5, image6, image7, image8, image9, image10;
+	public String name;
+	public boolean collision = false;
+	public int type; // 0 - player; 1 - NPC; 2 - enemy
+	public boolean attacking = false;
+
 	// CHARACTER STATUS
 	public int maxLife;
 	public int life;
+	public boolean invincible = false;
+	public int invincibleCounter = 0;
 
 	public Entity(GamePanel gp) {
 		this.gp = gp;
@@ -43,12 +54,22 @@ public class Entity {
 
 		setAction();
 
+		// CHECK COLLISIONS
 		collisionOn = false;
 		gp.cChecker.checkTile(this);
+		gp.cChecker.checkObject(this, false);
+		gp.cChecker.checkEntity(this, gp.npc);
+		gp.cChecker.checkEntity(this, gp.enemy);
+		boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
-		// CHECK TILE COLLISION
-		collisionOn = false;
-		gp.cChecker.checkTile(this);
+		if (this.type == 2 && contactPlayer == true) {
+			if (gp.player.invincible == false)
+				;
+
+			// we can give damage
+			gp.player.life -= 1;
+			gp.player.invincible = true;
+		}
 
 		// Collision == false => player can move
 		if (collisionOn == false) {
